@@ -106,9 +106,11 @@ const DashboardTables = () => {
                   key={i}
                   className="hover:bg-gray-50 cursor-pointer transition-colors"
                 >
-                  <td className="p-3 text-sm font-medium text-[#1E1E1E] leading-5 tracking-normal text-left">
-                    <Link to={"/home/event"}>{el.eventName}</Link>
-                  </td>
+                  <Link to={"/home/event"}>
+                    <td className="p-3 text-sm font-medium text-[#1E1E1E] leading-5 tracking-normal text-left">
+                      {el.eventName}
+                    </td>
+                  </Link>
                   <td className="p-3 text-sm font-medium text-[#1E1E1E] leading-5 tracking-normal text-left whitespace-nowrap">
                     {el.eventDate}
                   </td>
