@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Search, ChevronDown } from "lucide-react";
+import { Search, ChevronDown, Check, X } from "lucide-react";
 import Sidebar from "../../ui/event/EventSidebar";
 import OrderSidebar from "../../ui/event/EventOrderSidebar";
-import PayoutSidebar from "../../ui/event/EventPayoutSidebar";
 
 interface TabButtonProps {
   name: string;
@@ -10,7 +9,6 @@ interface TabButtonProps {
   setActiveTab: (tab: string) => void;
 }
 
-// Mock Data for Tickets
 const tickets = [
   {
     fullName: "Tolu Andula",
@@ -101,20 +99,35 @@ const orderData = {
       name: "Tolu Andula",
       email: "t.andula@gmail.com",
     },
+    {
+      ticketNumber: 1,
+      ticketType: "VIP",
+      name: "Tolu Andula",
+      email: "t.andula@gmail.com",
+    },
   ],
 };
 
-const payoutData = {
-  recipientName: "TedX Bowen University 2025",
-  recipientBank: "First Bank",
-  accountNumber: "009012345",
-  payoutAmount: "₦449,150",
-  payoutDate: "12 March, 2025, 12:57 PM",
-  status: "Pending",
-};
+const payouts = [
+  {
+    recipientName: "TedX Bowen University 2025",
+    recipientBank: "First Bank",
+    accountNumber: "009012345",
+    payoutAmount: "₦449,150",
+    payoutDate: "12 March, 2025, 12:57 PM",
+    status: "Pending",
+  },
+  {
+    recipientName: "TedX Bowen University 2025",
+    recipientBank: "First Bank",
+    accountNumber: "009012345",
+    payoutAmount: "₦449,150",
+    payoutDate: "12 March, 2025, 12:57 PM",
+    status: "Paid",
+  },
+];
 
 const orders = Array(10).fill(orderData);
-const payouts = Array(2).fill(payoutData);
 
 const TabButton = ({ name, activeTab, setActiveTab }: TabButtonProps) => (
   <button
@@ -136,10 +149,6 @@ const EventDashboardTables = () => {
   const [selectedOrder, setSelectedOrder] = useState<typeof orderData | null>(
     null
   );
-  const [showPayoutSidebar, setShowPayoutSidebar] = useState<boolean>(false);
-  const [selectedPayout, setSelectedPayout] = useState<
-    typeof payoutData | null
-  >(null);
 
   const open = () => {
     setShowSidebar(true);
@@ -148,11 +157,6 @@ const EventDashboardTables = () => {
   const openOrder = (order: typeof orderData) => {
     setSelectedOrder(order);
     setShowOrderSidebar(true);
-  };
-
-  const openPayout = () => {
-    setShowPayoutSidebar(true);
-    setSelectedPayout(payoutData);
   };
 
   const getStatusStyles = (status: string) => {
@@ -249,13 +253,6 @@ const EventDashboardTables = () => {
                       size={16}
                     />
                   </div>
-
-                  <button
-                    onClick={() => openPayout()}
-                    className="flex cursor-pointer items-center gap-2 h-10 px-4 rounded-lg border border-[#E9E9E9] text-sm font-medium text-[#344054] bg-white hover:bg-gray-50 transition-colors"
-                  >
-                    Request Payout
-                  </button>
                 </>
               )}
             </div>
@@ -317,7 +314,7 @@ const EventDashboardTables = () => {
                 ) : (
                   <>
                     <th className="p-4 text-xs font-medium text-[#6C7788] uppercase tracking-wider">
-                      Payout Details
+                      Recipient name
                     </th>
                     <th className="p-4 text-xs font-medium text-[#6C7788] uppercase tracking-wider">
                       Recipient Bank
@@ -333,6 +330,9 @@ const EventDashboardTables = () => {
                     </th>
                     <th className="p-4 text-xs font-medium text-[#6C7788] uppercase tracking-wider">
                       Status
+                    </th>
+                    <th className="p-4 text-xs font-medium text-[#6C7788] uppercase tracking-wider">
+                      Action
                     </th>
                   </>
                 )}
@@ -426,7 +426,7 @@ const EventDashboardTables = () => {
                       {el.payoutAmount}
                     </td>
                     <td className="p-4 text-sm font-medium text-[#1E1E1E] leading-5 tracking-normal">
-                      {el.payoutDate}
+                      {el.status === "Pending" ? "-" : el.payoutDate}
                     </td>
                     <td className="p-4">
                       <span
@@ -436,6 +436,18 @@ const EventDashboardTables = () => {
                       >
                         {el.status}
                       </span>
+                    </td>
+                    <td className="flex flex-row gap-3 p-4 cursor-pointer items-center justify-center">
+                      {el.status === "Pending" && (
+                        <>
+                          <button className="bg-[#067823] w-8 h-5 rounded-lg flex items-center justify-center">
+                            <Check color="#fff" />
+                          </button>
+                          <button className=" w-8 h-5 rounded-lg cursor-pointer bg-[#780606] flex items-center justify-center">
+                            <X color="#ffff" />
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -468,18 +480,6 @@ const EventDashboardTables = () => {
             <OrderSidebar
               order={selectedOrder}
               setShowOrderSidebar={setShowOrderSidebar}
-            />
-          )}
-
-          {showPayoutSidebar && (
-            <PayoutSidebar
-              setShowPayoutSidebar={setShowPayoutSidebar}
-              availableBalance={
-                selectedPayout?.payoutAmount || payouts[0].payoutAmount
-              }
-              bankName={selectedPayout?.recipientBank}
-              accountNumber={selectedPayout?.accountNumber}
-              accountName={selectedPayout?.recipientName}
             />
           )}
         </>

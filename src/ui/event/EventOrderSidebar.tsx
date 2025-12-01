@@ -14,6 +14,7 @@ interface Order {
   noOfTickets?: number | string;
   orderAmount?: string;
   dingFee?: string;
+  netRevenue: string;
   discount?: string;
   payout?: string;
   buyerName?: string;
@@ -100,8 +101,10 @@ const EventOrderSidebar = ({
             <DetailRow label="Order ID" value={order.orderId} />
             <DetailRow label="Order Amount" value={order.orderAmount} />
             <DetailRow label="Discount" value={order.discount} />
+            <DetailRow label="Discount" value={order.dingFee} />
             <DetailRow label="Fee" value={order.dingFee} />
             <DetailRow label="Payout" value={order.payout} />
+            <DetailRow label="Net Revenue" value={order.netRevenue} />
             <DetailRow label="Order Date" value={order.date} />
             <DetailRow label="Buyer Name" value={order.buyerName} />
             <DetailRow label="Buyer Email" value={order.buyerEmail} />
@@ -127,7 +130,7 @@ const EventOrderSidebar = ({
             ).map((t, idx) => (
               <div key={idx} className="flex flex-col gap-4">
                 <h3 className="text-[14px] leading-[20px] tracking-normal text-[#000000] font-medium">
-                  Ticket {t.ticketNumber ?? idx + 1}
+                  Ticket {idx + 1}
                 </h3>
                 <DetailRow label="Ticket type" value={t.ticketType} />
                 <DetailRow label="Name" value={t.name} />
