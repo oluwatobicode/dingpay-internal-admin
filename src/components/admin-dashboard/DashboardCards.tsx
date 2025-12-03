@@ -1,9 +1,11 @@
 import SidebarQR from "../../ui/event/EventSidebarQR";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const DashboardCards = () => {
   const [showQr, setShowQr] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // const onClick = () => {
   //   setShowQr(true);
@@ -66,14 +68,12 @@ const DashboardCards = () => {
           </div>
 
           <div className="flex flex-row gap-3">
-            {/* <button
-              onClick={onClick}
-              className="h-9 px-4 cursor-pointer rounded-lg border border-[#E9E9E9] text-sm text-[#1E1E1E] font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
+            <button
+              onClick={() => {
+                navigate("/home/create-event");
+              }}
+              className="h-9 px-4 cursor-pointer bg-[#111111] text-white text-sm font-medium rounded-lg hover:bg-black/80 transition-colors flex items-center gap-2"
             >
-              <QrCode size={16} />
-              Event QR
-            </button> */}
-            <button className="h-9 px-4 cursor-pointer bg-[#111111] text-white text-sm font-medium rounded-lg hover:bg-black/80 transition-colors flex items-center gap-2">
               Create Event
             </button>
           </div>
