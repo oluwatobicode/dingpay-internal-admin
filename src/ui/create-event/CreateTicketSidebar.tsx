@@ -1,23 +1,18 @@
 import { X } from "lucide-react";
 import { useState } from "react";
-import { useFormContext } from "react-hook-form";
-import type { EventFormData } from "../../schema/eventsSchema";
+import SingleTicket from "./SingleTicket";
+import GroupTickets from "./GroupTickets";
 
 interface CreateTicketProps {
   setCreateTicket: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CreateTicketSidebar = ({ setCreateTicket }: CreateTicketProps) => {
-  const [activeTab, setActiveTab] = useState("Single Ticket");
+  const [activeTab, setActiveTab] = useState<"single" | "group">("single");
 
   const closeSidebar = () => {
     setCreateTicket(false);
   };
-
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext<EventFormData>();
 
   return (
     <main className="fixed inset-0 bg-black/50 z-50 flex justify-end h-screen">
@@ -35,7 +30,36 @@ const CreateTicketSidebar = ({ setCreateTicket }: CreateTicketProps) => {
           </button>
         </div>
 
-        <div className=""></div>
+        <div className="flex mt-3 mb-3 px-6">
+          <button
+            onClick={() => setActiveTab("single")}
+            className={`flex-1 py-3 border-2 cursor-pointer rounded-l-lg text-center font-medium text-[16px] transition-all ${
+              activeTab === "single"
+                ? "text-white bg-[#1884F6]"
+                : "text-[#6C7788] bg-white hover:bg-gray-50"
+            }`}
+          >
+            Single ticket
+          </button>
+          <button
+            onClick={() => setActiveTab("group")}
+            className={`flex-1 py-3  border-2 cursor-pointer rounded-r-lg text-center font-medium text-[16px] transition-all ${
+              activeTab === "group"
+                ? "text-white bg-[#1884F6]"
+                : "text-[#6C7788] bg-white hover:bg-gray-50"
+            }`}
+          >
+            Group ticket
+          </button>
+        </div>
+
+        <div className="p-5 overflow-auto flex-1">
+          {activeTab === "single" ? (
+            <SingleTicket onClose={closeSidebar} />
+          ) : (
+            <GroupTickets onClose={closeSidebar} />
+          )}
+        </div>
       </div>
     </main>
   );

@@ -117,4 +117,5 @@ export const eventSchema = z
     }
   );
 
-export type EventFormData = z.infer<typeof eventSchema>;
+export type EventFormData = z.output<typeof eventSchema>;
+export type EventFormSchema = z.input<typeof eventSchema>;

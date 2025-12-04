@@ -8,14 +8,38 @@ interface FooterProps {
 
 const Footer = ({ isSubmitting }: FooterProps) => {
   const { currentStep, nextStep, prevStep } = useFormStore();
-  const { trigger } = useFormContext();
+  const { trigger, watch, setError, clearErrors } =
+    useFormContext<EventFormData>();
 
   const handleNext = async () => {
-    const fieldsToValidate = getFieldsForStep(currentStep);
-    const isValid = await trigger(fieldsToValidate);
+    // Special handling for step 2 - need to validate the refine rule
+    if (currentStep === 2) {
+      const singleTickets = watch("singleTickets") || [];
+      const groupTickets = watch("groupTickets") || [];
 
-    if (isValid) {
+      // Check if at least one ticket exists (refine rule check)
+      if (singleTickets.length === 0 && groupTickets.length === 0) {
+        // Manually set the error that matches the refine rule
+        setError("singleTickets", {
+          type: "manual",
+          message: "Please create at least one ticket (single or group)",
+        });
+        return;
+      }
+
+      // Clear the error if tickets exist
+      clearErrors("singleTickets");
+
+      // If tickets exist, allow progression
+      // Individual ticket validation happens when tickets are created
       nextStep();
+    } else {
+      const fieldsToValidate = getFieldsForStep(currentStep);
+      const isValid = await trigger(fieldsToValidate);
+
+      if (isValid) {
+        nextStep();
+      }
     }
   };
 
