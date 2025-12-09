@@ -31,26 +31,28 @@ const CreateTicketSidebar = ({ setCreateTicket }: CreateTicketProps) => {
         </div>
 
         <div className="flex mt-3 mb-3 px-6">
-          <button
-            onClick={() => setActiveTab("single")}
-            className={`flex-1 py-3 border-2 cursor-pointer rounded-l-lg text-center font-medium text-[16px] transition-all ${
-              activeTab === "single"
-                ? "text-white bg-[#1884F6]"
-                : "text-[#6C7788] bg-white hover:bg-gray-50"
-            }`}
-          >
-            Single ticket
-          </button>
-          <button
-            onClick={() => setActiveTab("group")}
-            className={`flex-1 py-3  border-2 cursor-pointer rounded-r-lg text-center font-medium text-[16px] transition-all ${
-              activeTab === "group"
-                ? "text-white bg-[#1884F6]"
-                : "text-[#6C7788] bg-white hover:bg-gray-50"
-            }`}
-          >
-            Group ticket
-          </button>
+          <div className="flex w-full border-2 border-[#E0E0E0] rounded-lg overflow-hidden">
+            <button
+              onClick={() => setActiveTab("single")}
+              className={`flex-1 h-[30px] cursor-pointer text-center font-medium text-[16px] transition-all ${
+                activeTab === "single"
+                  ? "text-white bg-[#1884F6]"
+                  : "text-[#6C7788] bg-white hover:bg-gray-50"
+              }`}
+            >
+              Single ticket
+            </button>
+            <button
+              onClick={() => setActiveTab("group")}
+              className={`flex-1 h-[30px] cursor-pointer text-center font-medium text-[16px] transition-all ${
+                activeTab === "group"
+                  ? "text-white bg-[#1884F6]"
+                  : "text-[#6C7788] bg-white hover:bg-gray-50"
+              }`}
+            >
+              Group ticket
+            </button>
+          </div>
         </div>
 
         <div className="p-5 overflow-auto flex-1">

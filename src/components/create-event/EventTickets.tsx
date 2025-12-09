@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { EventFormData } from "../../schema/eventsSchema";
 import CreateTicketSidebar from "../../ui/create-event/CreateTicketSidebar";
+import { Ellipsis } from "lucide-react";
 
 const EventsTickets = () => {
   const [createEvent, setCreateTicket] = useState<boolean>(false);
@@ -51,6 +52,9 @@ const EventsTickets = () => {
                 <th className="p-4 text-xs font-medium text-[#6C7788] uppercase tracking-wider">
                   Ticket Type
                 </th>
+                <th className=" text-xs font-medium text-[#6C7788] uppercase tracking-wider">
+                  {" "}
+                </th>
               </tr>
             </thead>
 
@@ -64,21 +68,24 @@ const EventsTickets = () => {
               ) : (
                 allTickets.map((ticket, i) => (
                   <tr key={i} className="hover:bg-gray-50 transition-colors">
-                    <td className="p-3 text-sm font-medium text-[#1E1E1E]">
+                    <td className="p-4 text-sm font-medium text-[#1E1E1E]">
                       {ticket.name}
                     </td>
-                    <td className="p-3 text-sm font-medium text-[#1E1E1E]">
+                    <td className="p-4 text-sm font-medium text-[#1E1E1E]">
                       {ticket.unlimitedTicket
                         ? "Unlimited"
                         : ticket.ticketQuantity}
                     </td>
-                    <td className="p-3 text-sm font-medium text-[#1E1E1E]">
+                    <td className="p-4 text-sm font-medium text-[#1E1E1E]">
                       {ticket.freeTickets
                         ? "Free"
                         : `₦${ticket.pricePerTicket.toLocaleString()}`}
                     </td>
-                    <td className="p-3 text-sm font-medium text-[#1E1E1E]">
+                    <td className="p-4 text-sm font-medium text-[#1E1E1E]">
                       {"groupSize" in ticket ? "Group" : "Single"}
+                    </td>
+                    <td className="text-center cursor-pointer">
+                      <Ellipsis className="cursor-pointer" color="#6C7788" />
                     </td>
                   </tr>
                 ))

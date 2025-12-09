@@ -94,11 +94,7 @@ export const eventSchema = z
       .min(1, "Support contact email is required")
       .email("Please enter a valid email address"),
     promotionalText: z.string().optional(),
-    website: z
-      .string()
-      .url("Please enter a valid URL")
-      .optional()
-      .or(z.literal("")),
+    website: z.string().optional(),
     instagram: z.string().optional(),
     twitter: z.string().optional(),
     tiktok: z.string().optional(),

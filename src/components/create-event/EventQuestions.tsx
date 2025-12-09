@@ -14,7 +14,7 @@ const EventQuestions = () => {
   };
 
   return (
-    <div className="px-10 h-screen">
+    <div className="px-10">
       <div className="flex flex-col">
         <div className="flex justify-end">
           <button
