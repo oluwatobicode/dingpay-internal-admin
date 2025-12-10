@@ -36,38 +36,44 @@ const CreateEvent = () => {
   const onSubmit = async (data: EventFormData) => {
     setIsSubmitting(true);
     try {
-      console.log("🎉 Final submission:", data); // Check console - you'll see ALL data
+      console.log("🎉 Final submission:", data);
       // TODO: Replace with actual API call
       // await createEvent(data);
 
       navigate("/home");
     } catch (error) {
       console.error("Error creating event:", error);
-      // You can add error handling/notification here
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Add this to see data changes in real-time
   console.log("Current form data:", methods.watch());
 
   return (
-    <main className="mx-auto max-w-7xl">
+    <div className="flex flex-col h-screen">
+      <Navbar />
       <FormProvider {...methods}>
-        <Navbar />
-        <EventHeader />
-        <form ref={formRef} onSubmit={methods.handleSubmit(onSubmit)}>
-          <div>
-            {currentStep === 1 && <EventDetails />}
-            {currentStep === 2 && <EventsTickets />}
-            {currentStep === 3 && <EventQuestions />}
-            {currentStep === 4 && <EventsInformation />}
+        <form
+          ref={formRef}
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className="flex flex-col flex-1 min-h-0"
+        >
+          <div className="flex-1 overflow-y-auto">
+            <div className="mx-auto max-w-7xl">
+              <EventHeader />
+              <div>
+                {currentStep === 1 && <EventDetails />}
+                {currentStep === 2 && <EventsTickets />}
+                {currentStep === 3 && <EventQuestions />}
+                {currentStep === 4 && <EventsInformation />}
+              </div>
+            </div>
           </div>
           <Footer isSubmitting={isSubmitting} />
         </form>
       </FormProvider>
-    </main>
+    </div>
   );
 };
 

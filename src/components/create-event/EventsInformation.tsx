@@ -1,9 +1,11 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import type { EventFormData } from "../../schema/eventsSchema";
+import RichTextEditor from "../../ui/create-event/RichTextEditor";
 
 const EventsInformation = () => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext<EventFormData>();
 
@@ -68,12 +70,18 @@ const EventsInformation = () => {
           <label className="block text-sm leading-4 tracking-normal font-medium mb-[10px]">
             Promotional Text
           </label>
-          <textarea
-            {...register("promotionalText")}
-            className="w-full px-3 py-2 border border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
-            rows={4}
-            placeholder="Promotional Text"
+          <Controller
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <RichTextEditor
+                value={value || ""}
+                onChange={onChange}
+                placeholder="Promotional Text"
+              />
+            )}
+            name="promotionalText"
           />
+
           {errors.promotionalText && (
             <p className="text-red-500 text-sm mt-1">
               {errors.promotionalText?.message}

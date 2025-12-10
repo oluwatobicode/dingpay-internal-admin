@@ -1,9 +1,11 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form"; // 1. Import Controller
 import type { EventFormData } from "../../schema/eventsSchema";
+import RichTextEditor from "../../ui/create-event/RichTextEditor";
 
 const EventDetails = () => {
   const {
     register,
+    control, // 2. Destructure control (needed for Controller)
     formState: { errors },
     watch,
   } = useFormContext<EventFormData>();
@@ -34,12 +36,19 @@ const EventDetails = () => {
             <label className="block text-sm leading-4 tracking-normal font-medium mb-[10px]">
               Event Description <span className="text-[#FF0000]">*</span>
             </label>
-            <textarea
-              {...register("eventDescription")}
-              className="w-full px-3 py-2 border border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
-              rows={4}
-              placeholder="Event description"
+
+            <Controller
+              name="eventDescription"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <RichTextEditor
+                  value={value || ""}
+                  onChange={onChange}
+                  placeholder="Event description"
+                />
+              )}
             />
+
             {errors.eventDescription && (
               <p className="text-red-500 text-sm mt-1">
                 {errors.eventDescription.message}
@@ -85,7 +94,7 @@ const EventDetails = () => {
                 Start Date <span className="text-[#FF0000]">*</span>
               </label>
               <input
-                type="text"
+                type="date"
                 {...register("startDate")}
                 className="w-full px-3 py-2 border  h-[40px] border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
                 placeholder="Start date"
@@ -101,7 +110,7 @@ const EventDetails = () => {
                 Start Time <span className="text-[#FF0000]">*</span>
               </label>
               <input
-                type="text"
+                type="time"
                 {...register("startTime")}
                 className="w-full px-3 py-2 border  h-[40px] border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
                 placeholder="Start time"
@@ -120,7 +129,7 @@ const EventDetails = () => {
                 End Date <span className="text-[#FF0000]">*</span>
               </label>
               <input
-                type="text"
+                type="date"
                 {...register("endDate")}
                 className="w-full px-3 py-2 border  h-[40px] border-[#D4DAE3]  rounded-[12px] outline-none focus:border-gray-400"
                 placeholder="End date"
@@ -136,7 +145,7 @@ const EventDetails = () => {
                 End Time <span className="text-[#FF0000]">*</span>
               </label>
               <input
-                type="text"
+                type="time"
                 {...register("endTime")}
                 className="w-full px-3 py-2 border  h-[40px] border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
                 placeholder="End time"

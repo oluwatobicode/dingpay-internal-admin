@@ -1,47 +1,50 @@
 import { useFormContext } from "react-hook-form";
 import type { EventFormData } from "../../schema/eventsSchema";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import ToggleSwitch from "./ToggleSwitch";
+import RichTextEditor from "./RichTextEditor"; // Import here
 
 interface GroupTicketProps {
   onClose?: () => void;
 }
 
 const GroupTickets = ({ onClose }: GroupTicketProps) => {
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   const { watch, setValue } = useFormContext<EventFormData>();
   const [isFree, setIsFree] = useState<boolean>(false);
   const [setPlatformFee, setIsPlatformFee] = useState<boolean>(false);
   const [isUnlimited, setIsUnlimited] = useState<boolean>(false);
   const [ticketName, setTicketName] = useState<string>("");
+
+  // HTML Content State
   const [ticketDescription, setTicketDescription] = useState<string>("");
+
   const [perTicketPrice, setPerTicketPrice] = useState<string>("");
   const [ticketQuantity, setTicketQuantity] = useState<string>("");
   const [groupSize, setGroupSize] = useState<string>("");
 
-  //   watching
   const currentGroupTickets = watch("groupTickets") || [];
 
-  const handlePowerToggle = (state: boolean) => {
-    setIsPlatformFee(state);
-  };
+  const handlePowerToggle = (state: boolean) => setIsPlatformFee(state);
+  const handleToggleFree = (state: boolean) => setIsFree(state);
+  const handleToggleUnlimited = (state: boolean) => setIsUnlimited(state);
 
-  const handleToggleFree = (state: boolean) => {
-    setIsFree(state);
-  };
-
-  const handleToggleUnlimited = (state: boolean) => {
-    setIsUnlimited(state);
-  };
-
-  // ADD THIS FUNCTION - This is what saves the ticket
   const handleAddTicket = () => {
-    // Validation
     if (!ticketName.trim()) {
       alert("Please enter a ticket name");
       return;
     }
-    if (!ticketDescription.trim()) {
+    // Validation: Strip HTML to ensure they didn't just type spaces
+    if (!ticketDescription.replace(/<[^>]*>/g, "").trim()) {
       alert("Please enter a ticket description");
       return;
     }
@@ -58,10 +61,9 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
       return;
     }
 
-    // Create new ticket object
     const newTicket = {
       name: ticketName,
-      description: ticketDescription,
+      description: ticketDescription, // Sends HTML string
       pricePerTicket: isFree ? 0 : parseFloat(perTicketPrice) || 0,
       freeTickets: isFree,
       platformFee: setPlatformFee,
@@ -70,12 +72,11 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
       groupSize: parseInt(groupSize) || 1,
     };
 
-    // Add to form's singleTickets array
     setValue("groupTickets", [...currentGroupTickets, newTicket]);
 
-    // Reset form fields
+    // Reset fields
     setTicketName("");
-    setTicketDescription("");
+    setTicketDescription(""); // Reset editor
     setPerTicketPrice("");
     setTicketQuantity("");
     setGroupSize("");
@@ -85,9 +86,7 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
 
     alert("Ticket added successfully!");
 
-    if (onClose) {
-      onClose();
-    }
+    if (onClose) onClose();
   };
 
   return (
@@ -109,12 +108,11 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
         <label className="block text-sm leading-4 tracking-normal font-medium mb-[10px]">
           Ticket Description
         </label>
-        <textarea
-          className="w-full px-3 py-2 border border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
-          rows={4}
-          placeholder="Write here..."
+
+        <RichTextEditor
           value={ticketDescription}
-          onChange={(e) => setTicketDescription(e.target.value)}
+          onChange={setTicketDescription}
+          placeholder="Write here..."
         />
       </div>
 
@@ -127,7 +125,7 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
             <input
               className="w-full px-3 py-2 border border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
               placeholder="₦ 0.00"
-              type="text"
+              type="number"
               value={perTicketPrice}
               onChange={(e) => setPerTicketPrice(e.target.value)}
               disabled={isFree}
@@ -138,7 +136,6 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
             <label className="font-medium text-[14px] leading-[16px] tracking-normal">
               is Free
             </label>
-
             <ToggleSwitch initial={isFree} onToggle={handleToggleFree} />
           </div>
         </div>
@@ -147,7 +144,6 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
           <h1 className="font-medium text-[14px] leading-[16px] tracking-normal">
             Guests pay the platform fees
           </h1>
-
           <ToggleSwitch initial={setPlatformFee} onToggle={handlePowerToggle} />
         </div>
       </div>
@@ -160,7 +156,7 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
           <input
             className="w-full px-3 py-2 border border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
             placeholder="Number of tickets available"
-            type="text"
+            type="number"
             value={ticketQuantity}
             onChange={(e) => setTicketQuantity(e.target.value)}
             disabled={isUnlimited}
@@ -171,7 +167,6 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
           <p className="font-medium text-sm leading-[16px] tracking-normal">
             is Unlimited
           </p>
-
           <ToggleSwitch
             initial={isUnlimited}
             onToggle={handleToggleUnlimited}
@@ -186,7 +181,7 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
         <input
           className="w-full text-[16px] px-3 py-2 border border-[#D4DAE3] rounded-[12px] outline-none focus:border-gray-400"
           placeholder="Number of people in group"
-          type="text"
+          type="number"
           value={groupSize}
           onChange={(e) => setGroupSize(e.target.value)}
         />
@@ -202,4 +197,5 @@ const GroupTickets = ({ onClose }: GroupTicketProps) => {
     </div>
   );
 };
+
 export default GroupTickets;
